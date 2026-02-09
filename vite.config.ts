@@ -13,6 +13,26 @@ export default defineConfig({
   },
   build: {
     outDir: 'dist',
-    sourcemap: false
+    sourcemap: false,
+    chunkSizeWarningLimit: 1000, // Silences the warning for chunks under 1MB
+    rollupOptions: {
+      output: {
+        // Splitting large vendor libraries into separate chunks for better caching and smaller file sizes
+        manualChunks(id) {
+          if (id.includes('node_modules')) {
+            if (id.includes('@google/genai')) {
+              return 'vendor-genai';
+            }
+            if (id.includes('recharts')) {
+              return 'vendor-charts';
+            }
+            if (id.includes('lucide-react')) {
+              return 'vendor-icons';
+            }
+            return 'vendor';
+          }
+        }
+      }
+    }
   }
 });
