@@ -1,0 +1,9 @@
+
+{
+  "name": "MediInsight AI",
+  "description": "An AI-powered medical report management application for patients to understand, track, and manage their health history with confidence.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}
