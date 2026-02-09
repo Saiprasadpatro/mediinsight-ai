@@ -4,7 +4,6 @@ import react from '@vitejs/plugin-react';
 export default defineConfig({
   plugins: [react()],
   define: {
-    // This allows process.env.API_KEY to be used in your code
     'process.env.API_KEY': JSON.stringify(process.env.API_KEY || '')
   },
   server: {
@@ -14,23 +13,14 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     sourcemap: false,
-    chunkSizeWarningLimit: 1000, // Silences the warning for chunks under 1MB
+    chunkSizeWarningLimit: 1500, // Increased to 1.5MB to suppress the 500kb warning for large medical libraries
     rollupOptions: {
       output: {
-        // Splitting large vendor libraries into separate chunks for better caching and smaller file sizes
-        manualChunks(id) {
-          if (id.includes('node_modules')) {
-            if (id.includes('@google/genai')) {
-              return 'vendor-genai';
-            }
-            if (id.includes('recharts')) {
-              return 'vendor-charts';
-            }
-            if (id.includes('lucide-react')) {
-              return 'vendor-icons';
-            }
-            return 'vendor';
-          }
+        manualChunks: {
+          'vendor-react': ['react', 'react-dom'],
+          'vendor-genai': ['@google/genai'],
+          'vendor-charts': ['recharts'],
+          'vendor-ui': ['lucide-react']
         }
       }
     }
