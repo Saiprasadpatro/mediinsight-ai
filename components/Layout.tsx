@@ -12,7 +12,9 @@ import {
   PlusCircle,
   Menu,
   X,
-  Mic
+  Mic,
+  Mail,
+  Linkedin
 } from 'lucide-react';
 
 interface LayoutProps {
@@ -64,7 +66,7 @@ const Layout: React.FC<LayoutProps> = ({ children, activeTab, setActiveTab, onUp
             </button>
           </div>
 
-          <nav className="flex-1 p-4 space-y-2 overflow-y-auto custom-scrollbar">
+          <nav className="flex-1 p-4 space-y-1 overflow-y-auto custom-scrollbar">
             <button 
               onClick={() => { onUploadClick(); setIsSidebarOpen(false); }}
               className="w-full flex items-center gap-3 px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl transition-colors shadow-lg shadow-blue-200 mb-3 font-medium"
@@ -75,7 +77,7 @@ const Layout: React.FC<LayoutProps> = ({ children, activeTab, setActiveTab, onUp
 
             <button 
               onClick={() => { onVoiceClick(); setIsSidebarOpen(false); }}
-              className="w-full flex items-center gap-3 px-4 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl transition-colors mb-6 font-medium"
+              className="w-full flex items-center gap-3 px-4 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl transition-colors mb-4 font-medium"
             >
               <Mic className="w-5 h-5 text-blue-600" />
               Voice Assistant
@@ -96,6 +98,29 @@ const Layout: React.FC<LayoutProps> = ({ children, activeTab, setActiveTab, onUp
                 {item.label}
               </button>
             ))}
+
+            {/* Developer Contact Section */}
+            <div className="mt-8 pt-6 border-t border-slate-50 px-4">
+              <p className="text-[10px] font-bold text-slate-300 uppercase tracking-[0.2em] mb-4">Contact Developer</p>
+              <div className="space-y-3">
+                <a 
+                  href="mailto:saiprasadpatro389@gmail.com"
+                  className="flex items-center gap-2 text-[11px] text-slate-400 hover:text-blue-600 transition-colors group"
+                >
+                  <Mail className="w-3 h-3 text-slate-300 group-hover:text-blue-600" />
+                  <span className="truncate">saiprasadpatro389@gmail.com</span>
+                </a>
+                <a 
+                  href="https://www.linkedin.com/in/sai-prasad-patro-5654c83/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 text-[11px] text-slate-400 hover:text-blue-600 transition-colors group"
+                >
+                  <Linkedin className="w-3 h-3 text-slate-300 group-hover:text-blue-600" />
+                  <span>LinkedIn Profile</span>
+                </a>
+              </div>
+            </div>
           </nav>
 
           <div className="p-4 border-t border-slate-100">

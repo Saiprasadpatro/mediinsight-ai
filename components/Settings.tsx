@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Settings as SettingsIcon, Bell, Lock, Shield, Eye, Database } from 'lucide-react';
+import { Bell, Lock, Shield, Database, User as UserIcon, Mail, Linkedin, LifeBuoy } from 'lucide-react';
 import { User } from '../types';
 
 const Settings: React.FC<{ user: User }> = ({ user }) => {
@@ -52,6 +52,45 @@ const Settings: React.FC<{ user: User }> = ({ user }) => {
               ))}
             </div>
           </div>
+
+          <div className="bg-white p-8 rounded-3xl border border-slate-200 shadow-sm">
+            <h3 className="font-bold text-slate-800 mb-6 flex items-center gap-2">
+              <LifeBuoy className="w-5 h-5 text-blue-600" /> Support & Contact
+            </h3>
+            <p className="text-sm text-slate-500 mb-6">Need help or have feedback? Reach out to the developer directly.</p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <a 
+                href="mailto:saiprasadpatro389@gmail.com"
+                className="flex items-center justify-between p-4 bg-slate-50 border border-slate-100 rounded-2xl hover:bg-slate-100 transition-colors group"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center text-blue-600 shadow-sm">
+                    <Mail className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-bold text-slate-800">Email Us</p>
+                    <p className="text-xs text-slate-400">Get direct support</p>
+                  </div>
+                </div>
+              </a>
+              <a 
+                href="https://www.linkedin.com/in/sai-prasad-patro-5654c83/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-between p-4 bg-slate-50 border border-slate-100 rounded-2xl hover:bg-slate-100 transition-colors group"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center text-blue-600 shadow-sm">
+                    <Linkedin className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-bold text-slate-800">LinkedIn</p>
+                    <p className="text-xs text-slate-400">Professional profile</p>
+                  </div>
+                </div>
+              </a>
+            </div>
+          </div>
         </div>
 
         <div className="space-y-6">
@@ -84,5 +123,3 @@ const Settings: React.FC<{ user: User }> = ({ user }) => {
 };
 
 export default Settings;
-
-import { User as UserIcon } from 'lucide-react';
