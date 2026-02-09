@@ -1,8 +1,8 @@
-
 import { GoogleGenAI, Type } from "@google/genai";
 import { HealthStatus, MedicalReport } from "../types";
 
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+// Note: Ensure process.env.API_KEY is defined in your environment (Vercel Settings)
+const ai = new GoogleGenAI({ apiKey: process.env.API_KEY || "" });
 
 /**
  * Extracts the MIME type and base64 data from a Data URL
@@ -13,12 +13,14 @@ const parseDataUrl = (dataUrl: string) => {
   return { mimeType: matches[1], data: matches[2] };
 };
 
+// Use flash for high-volume tasks to avoid quota issues
+const DEFAULT_MODEL = 'gemini-3-flash-preview';
+
 export const analyzeMedicalReport = async (imageB64: string, fileName: string): Promise<Partial<MedicalReport>> => {
-  const model = 'gemini-3-pro-preview';
   const { mimeType, data } = parseDataUrl(imageB64);
 
   const response = await ai.models.generateContent({
-    model,
+    model: DEFAULT_MODEL,
     contents: {
       parts: [
         { inlineData: { mimeType, data } },
@@ -35,7 +37,7 @@ export const analyzeMedicalReport = async (imageB64: string, fileName: string): 
           6. Status MUST be exactly one of: "Normal", "Borderline", or "Concerning".
           
           IMPORTANT: You must include a medical disclaimer in the 'disclaimer' field.
-          Respond ONLY with valid JSON following the schema provided.`
+          Respond ONLY with valid JSON following the schema provided. If a field is unknown, provide a sensible default.`
         }
       ]
     },
@@ -74,7 +76,6 @@ export const analyzeMedicalReport = async (imageB64: string, fileName: string): 
     
     const parsedData = JSON.parse(textOutput);
     
-    // Map the string status to the HealthStatus enum safely
     const processedIndicators = (parsedData.indicators || []).map((ind: any) => ({
       ...ind,
       status: Object.values(HealthStatus).includes(ind.status as HealthStatus) 
@@ -90,19 +91,18 @@ export const analyzeMedicalReport = async (imageB64: string, fileName: string): 
     };
   } catch (e) {
     console.error("Analysis Parsing Error:", e);
-    throw new Error("Failed to interpret the medical report format.");
+    throw new Error("Failed to interpret the medical report format. Please ensure the image is clear.");
   }
 };
 
 export const getHealthInsights = async (reports: MedicalReport[]) => {
   if (reports.length === 0) return "Upload your first report to get AI-powered insights.";
   
-  const model = 'gemini-3-pro-preview';
   const historyText = reports.map(r => `${r.date}: ${r.title} - ${r.summary}`).join('\n');
 
   try {
     const response = await ai.models.generateContent({
-      model,
+      model: DEFAULT_MODEL,
       contents: `You are a health consultant. Based on the following medical history, provide 3 key insights or trends. 
       Focus on patterns over time. Keep it concise, empathetic, and always include a medical disclaimer.
       
@@ -111,14 +111,14 @@ export const getHealthInsights = async (reports: MedicalReport[]) => {
     });
     return response.text;
   } catch (e) {
-    return "Unable to generate insights at this moment.";
+    console.error("Insights Error:", e);
+    return "Unable to generate insights at this moment. You might have hit your API quota.";
   }
 };
 
 export const chatWithAssistant = async (history: { role: string, content: string }[], message: string) => {
-  const model = 'gemini-3-pro-preview';
   const chat = ai.chats.create({
-    model,
+    model: DEFAULT_MODEL,
     history: history.map(h => ({
       role: h.role === 'assistant' ? 'model' : 'user',
       parts: [{ text: h.content }]
