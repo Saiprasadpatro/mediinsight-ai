@@ -34,6 +34,13 @@
       @keyframes zoom-in { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
       .fade-in { animation-name: fade-in; }
       .zoom-in { animation-name: zoom-in; }
+      
+      @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-5px); }
+        75% { transform: translateX(5px); }
+      }
+      .shake { animation: shake 0.3s ease-in-out; }
     </style>
   <script type="importmap">
 {
@@ -52,7 +59,6 @@
 </head>
   <body>
     <div id="root"></div>
-    <!-- Vite handles the module loading automatically -->
     <script type="module" src="/index.tsx"></script>
   </body>
 </html>
