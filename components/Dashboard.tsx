@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Activity, ShieldCheck, Clock, ArrowRight, Pill, Sparkles, Loader2 } from 'lucide-react';
 import { MedicalReport, Medication, HealthStatus } from '../types';
@@ -14,22 +15,16 @@ interface DashboardProps {
 const Dashboard: React.FC<DashboardProps> = ({ reports, medications, onNavigate, userName }) => {
   const [insight, setInsight] = React.useState<string>('');
   const [loadingInsight, setLoadingInsight] = React.useState(false);
-  const [lastReportCount, setLastReportCount] = React.useState(0);
 
   React.useEffect(() => {
-    // Only call the AI if we have reports AND the number of reports has changed
-    // This prevents hitting the API quota every time the user clicks 'Dashboard'
-    if (reports.length > 0 && reports.length !== lastReportCount) {
+    if (reports.length > 0) {
       setLoadingInsight(true);
       getHealthInsights(reports).then(res => {
         setInsight(res || '');
         setLoadingInsight(false);
-        setLastReportCount(reports.length);
-      }).catch(() => {
-        setLoadingInsight(false);
       });
     }
-  }, [reports, lastReportCount]);
+  }, [reports]);
 
   const recentReport = reports[0];
   
@@ -64,7 +59,7 @@ const Dashboard: React.FC<DashboardProps> = ({ reports, medications, onNavigate,
             </div>
           ) : (
             <p className="text-lg font-medium leading-relaxed max-w-2xl">
-              {insight || (reports.length > 0 ? "Analyzing your latest data..." : "Upload your first medical report to see long-term health patterns.")}
+              {insight || "Upload your first medical report to see long-term health patterns and personalized insights."}
             </p>
           )}
         </div>
